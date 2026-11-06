@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.Locale;
 
 import java.nio.file.Files;
+
+import hai913i.tp2.coupling.CouplingMatrix;
 import hai913i.tp2.input.Tp1FactsAdapter;
 
 /**
@@ -129,9 +131,17 @@ public final class Main {
                 facts.calls().size());
         OUT.printf(Locale.ROOT, "Seuil CP retenu     : %.4f%n", cp);
 
-        // TODO étape A1 : écarter les arcs intra-classe, agréger les arcs
-        //                 restants par couple de classes distinctes, puis
-        //                 calculer C(A, B) = r(A, B) / |E_inter|.
+        CouplingMatrix coupling = new CouplingMatrix(facts);
+        OUT.println();
+        OUT.println("== A1 : couplage entre classes ==");
+        OUT.printf(Locale.ROOT, "Arcs internes écartés : %d%n", coupling.internalArcs());
+        OUT.printf(Locale.ROOT, "|E_inter|             : %d%n", coupling.interArcs());
+        OUT.printf(Locale.ROOT, "Couples non nuls      : %d%n", coupling.nonZeroPairs().size());
+        OUT.printf(Locale.ROOT, "Somme des couplages   : %.4f%n", coupling.sum());
+        for (CouplingMatrix.Pair p : coupling.nonZeroPairs()) {
+          OUT.printf(Locale.ROOT, "  %-16s - %-16s %d/%d = %.4f%n",
+                  simple(p.a()), simple(p.b()), p.arcs(), coupling.interArcs(), p.coupling());
+        }
         // TODO étape A2 : construire et exporter le graphe de couplage pondéré.
         // TODO étape B1 : regroupement hiérarchique ascendant, lien moyen,
         //                 égalités départagées comme le sujet l'impose.
@@ -142,6 +152,9 @@ public final class Main {
         OUT.println("Faits chargés. Les étapes A1 à B3 restent à écrire.");
     }
 
+    private static String simple(String qualifiedName) {
+      return qualifiedName.substring(qualifiedName.lastIndexOf('.') + 1);
+    }
 
 
     /**
