@@ -6,6 +6,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Locale;
 
+import java.nio.file.Files;
+import hai913i.tp2.input.Tp1FactsAdapter;
+
 /**
  * Point d'entrée du squelette : vérifie l'environnement et charge les faits.
  *
@@ -90,17 +93,31 @@ public final class Main {
             return;
         }
 
-        Facts facts;
-        try {
-            if (prefix == null) {
-                prefix = Facts.discoverPrefix(dir);
-            }
-            facts = Facts.load(dir, prefix);
-        } catch (IOException e) {
-            ERR.println("Lecture des faits impossible : " + e.getMessage());
-            System.exit(2);
-            return;
+      Facts facts;
+      String source;
+      try {
+        if (prefix != null || containsCanonicalFacts(dir)) {
+          // chemin 2 : jeu de données au format canonique (CSV)
+          if (prefix == null) {
+            prefix = Facts.discoverPrefix(dir);
+          }
+          facts = Facts.load(dir, prefix);
+          source = "jeu de données canonique (CSV)";
+        } else {
+          // chemin 1 : notre extracteur du TP 1 sur les sources Java
+          facts = Tp1FactsAdapter.from(dir);
+          prefix = dir.toAbsolutePath().getFileName().toString();
+          source = "extracteur du TP 1 (JDT)";
         }
+      } catch (IOException e) {
+        ERR.println("Lecture des faits impossible : " + e.getMessage());
+        System.exit(2);
+        return;
+      }
+
+
+
+      OUT.println("Source des faits    : " + source);
 
         OUT.println("Dossier des faits   : " + dir.toAbsolutePath());
         OUT.println("Jeu de données      : " + prefix);
@@ -125,6 +142,8 @@ public final class Main {
         OUT.println("Faits chargés. Les étapes A1 à B3 restent à écrire.");
     }
 
+
+
     /**
      * Affiche un message d'erreur, le mode d'emploi, et sort avec le code 1.
      *
@@ -145,5 +164,15 @@ public final class Main {
         ERR.println("  --prefix <préfixe>   force le préfixe ; par défaut il est");
         ERR.println("                       déduit du dossier");
         System.exit(1);
+    }
+
+    /** Vrai si le dossier contient un jeu au format canonique (*-classes.csv). */
+    private static boolean containsCanonicalFacts(Path dir) throws IOException {
+      if (!Files.isDirectory(dir)) {
+        throw new IOException("dossier introuvable : " + dir.toAbsolutePath());
+      }
+      try (var entries = Files.list(dir)) {
+        return entries.anyMatch(p -> p.getFileName().toString().endsWith("-classes.csv"));
+      }
     }
 }

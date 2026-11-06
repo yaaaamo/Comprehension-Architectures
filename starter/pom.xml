@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  HAI913I — TP 2 « Compréhension et architectures » — squelette (2026-2027)
-
-  Versions épinglées et testées : JDK 17 (minimum) et 21, Maven 3.9.6,
-  JUnit Jupiter 5.14.4. AUCUNE dépendance d'exécution : le TP 2 ne relit pas
-  le code source, il part des faits. JUnit est en portée « test » seulement.
-
-  Tout est en UTF-8 : les sources, les fichiers de données, la sortie console
-  et celle des tests.
-
-    mvn clean test       compile et exécute le test de fumée (point de contrôle A0)
-    mvn clean package    produit target/hai913i-tp2.jar (exécutable)
-    java -jar target/hai913i-tp2.jar CHEMIN_DU_DOSSIER_DES_FAITS
-
-  Le squelette s'arrête à l'étape A0. Le couplage (A1), le graphe pondéré (A2),
-  le regroupement (B1), le dendrogramme (B2) et la coupe (B3) sont le TP.
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -28,7 +11,6 @@
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
-        <!-- les trois propriétés d'encodage : sources, compilation, rapports -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -36,6 +18,13 @@
     </properties>
 
     <dependencies>
+        <!-- CHANGE 1 : chemin 1, notre extracteur du TP 1 (installé avec mvn install) -->
+        <dependency>
+            <groupId>fr.umontpellier.hai913i</groupId>
+            <artifactId>hai913i-tp1-analyzer</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -51,27 +40,53 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <!-- la JVM forkée pour les tests parle aussi UTF-8 -->
                     <argLine>-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8</argLine>
                 </configuration>
             </plugin>
+
+            <!-- CHANGE 2 : shade au lieu de maven-jar-plugin, pour un jar exécutable
+                 qui contient aussi le TP 1 et JDT -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>hai913i.tp2.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>hai913i.tp2.Main</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                    <exclude>META-INF/*.EC</exclude>
+                                    <exclude>module-info.class</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -47,6 +47,14 @@ import java.util.Map;
 public final class Facts {
 
     /**
+     * Construit des faits à partir d'une autre source que les CSV
+     * (chemin 1 : notre extracteur du TP 1, via Tp1FactsAdapter).
+     */
+    public static Facts of(List<ClassInfo> classes, Map<String, String> methodOwners, List<CallArc> calls) {
+      return new Facts(classes, methodOwners, calls);
+    }
+
+    /**
      * Une classe du projet analysé.
      *
      * @param name        nom qualifié, p. ex. {@code library.model.Item}
