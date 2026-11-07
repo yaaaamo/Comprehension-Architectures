@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import java.nio.file.Files;
@@ -12,6 +14,9 @@ import hai913i.tp2.clustering.AgglomerativeClustering;
 import hai913i.tp2.clustering.Cluster;
 import hai913i.tp2.clustering.Merge;
 import hai913i.tp2.coupling.CouplingMatrix;
+import hai913i.tp2.cut.ClassModule;
+import hai913i.tp2.cut.CutResult;
+import hai913i.tp2.cut.ModuleCutter;
 import hai913i.tp2.graph.WeightedGraph;
 import hai913i.tp2.input.Tp1FactsAdapter;
 import hai913i.tp2.output.DendrogramExporter;
@@ -195,10 +200,31 @@ public final class Main {
           System.exit(2);
         }
 
-        // TODO étape B3 : couper l'arbre sous les trois contraintes, puis
-        //                 vérifier la contrainte M/2 et signaler sa violation.
+        CutResult cut = ModuleCutter.cut(clustering.root(), coupling::coupling, cp);
+        List<String> report = new ArrayList<>();
+        report.add(String.format(Locale.ROOT, "== B3 : modules pour CP = %.4f ==", cp));
+        int k = 1;
+        for (ClassModule m : cut.modules()) {
+          report.add(String.format(Locale.ROOT, "Module %d : %d classe(s), C(G) = %s  %s",
+                  k++, m.size(),
+                  m.size() < 2 ? "sans objet" : String.format(Locale.ROOT, "%.4f", m.internalCoupling()),
+                  group(m.node())));
+        }
+        report.add(String.format(Locale.ROOT, "Modules : %d   plafond M/2 = %d",
+                cut.modules().size(), cut.maxModules()));
+        report.add(cut.respectsMHalf()
+                ? "Contrainte M/2 : respectée"
+                : "CONTRAINTE M/2 VIOLÉE : coupe rejetée (" + cut.modules().size() + " > "
+                + cut.maxModules() + "). Avec ce seuil, les contraintes sont incompatibles.");
         OUT.println();
-        OUT.println("Faits chargés. Les étapes A1 à B3 restent à écrire.");
+        report.forEach(OUT::println);
+        try {
+          DendrogramExporter.write(report,
+                  out.resolve(String.format(Locale.ROOT, "modules-cp%.3f.txt", cp)));
+        } catch (IOException e) {
+          ERR.println("Écriture des exports impossible : " + e.getMessage());
+          System.exit(2);
+        }
     }
 
     private static String group(Cluster c) {
