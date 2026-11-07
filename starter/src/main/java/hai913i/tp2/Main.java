@@ -14,6 +14,7 @@ import hai913i.tp2.clustering.Merge;
 import hai913i.tp2.coupling.CouplingMatrix;
 import hai913i.tp2.graph.WeightedGraph;
 import hai913i.tp2.input.Tp1FactsAdapter;
+import hai913i.tp2.output.DendrogramExporter;
 import hai913i.tp2.output.GraphExporter;
 
 /**
@@ -177,7 +178,23 @@ public final class Main {
           OUT.printf(Locale.ROOT, "%2d  %.4f  %s  +  %s%n", m.step(), m.similarity(),
                   group(m.a()), group(m.b()));
         }
-        // TODO étape B2 : représenter et exporter le dendrogramme.
+
+        OUT.println();
+        OUT.println("== B2 : dendrogramme ==");
+        DendrogramExporter.indentedTree(clustering.root(), clustering.merges()).forEach(OUT::println);
+        try {
+          DendrogramExporter.write(DendrogramExporter.indentedTree(clustering.root(), clustering.merges()),
+                  out.resolve("dendrogramme.txt"));
+          DendrogramExporter.write(DendrogramExporter.mergeList(clustering.merges()),
+                  out.resolve("fusions.csv"));
+          DendrogramExporter.write(DendrogramExporter.dot(clustering.root(), clustering.merges()),
+                  out.resolve("dendrogramme.dot"));
+          OUT.println("Exports : dendrogramme.txt, fusions.csv, dendrogramme.dot dans " + out);
+        } catch (IOException e) {
+          ERR.println("Écriture des exports impossible : " + e.getMessage());
+          System.exit(2);
+        }
+
         // TODO étape B3 : couper l'arbre sous les trois contraintes, puis
         //                 vérifier la contrainte M/2 et signaler sa violation.
         OUT.println();

@@ -1,0 +1,29 @@
++ [28] fusion 14, similarité 0.0000, 15 classes
+  + [26] fusion 12, similarité 0.0025, 13 classes
+    + [18] fusion 4, similarité 0.0541, 2 classes
+      - Statistics  [13]
+      - TextUtils  [14]
+    + [25] fusion 11, similarité 0.0027, 11 classes
+      - Loanable  [5]
+      + [24] fusion 10, similarité 0.0030, 10 classes
+        - Category  [2]
+        + [23] fusion 9, similarité 0.0077, 9 classes
+          + [20] fusion 6, similarité 0.0270, 2 classes
+            - Member  [6]
+            - ConsoleNotifier  [8]
+          + [22] fusion 8, similarité 0.0090, 7 classes
+            - Notifier  [12]
+            + [21] fusion 7, similarité 0.0108, 6 classes
+              - Book  [1]
+              + [19] fusion 5, similarité 0.0405, 5 classes
+                - Loan  [11]
+                + [17] fusion 3, similarité 0.0608, 4 classes
+                  + [15] fusion 1, similarité 0.1081, 2 classes
+                    - Item  [4]
+                    - LoanService  [10]
+                  + [16] fusion 2, similarité 0.0811, 2 classes
+                    - LibraryApp  [0]
+                    - Catalog  [7]
+  + [27] fusion 13, similarité 0.0000, 2 classes
+    - Dvd  [3]
+    - LoanException  [9]
