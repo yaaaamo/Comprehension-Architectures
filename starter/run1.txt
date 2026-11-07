@@ -1,0 +1,61 @@
+Source des faits    : extracteur du TP 1 (JDT)
+Dossier des faits   : /Users/yagmuraydemir/Desktop/AYDEMIR_Yagmur_HAI913I_TP2/Comprehension-Architectures/starter/../../static-analysis-jdt/static-analysis/resources/validation
+Jeu de données      : validation
+Classes             : 15
+Méthodes            : 59
+Arcs du graphe      : 44
+Seuil CP retenu     : 0.0250
+
+== A1 : couplage entre classes ==
+Arcs internes écartés : 7
+|E_inter|             : 37
+Couples non nuls      : 19
+Somme des couplages   : 1.0000
+  Item             - LoanService      4/37 = 0.1081
+  LoanService      - Loan             4/37 = 0.1081
+  LibraryApp       - Item             3/37 = 0.0811
+  LibraryApp       - Catalog          3/37 = 0.0811
+  LibraryApp       - LoanService      3/37 = 0.0811
+  LibraryApp       - Loan             2/37 = 0.0541
+  Item             - Member           2/37 = 0.0541
+  Item             - Catalog          2/37 = 0.0541
+  Member           - LoanService      2/37 = 0.0541
+  LoanService      - Notifier         2/37 = 0.0541
+  Statistics       - TextUtils        2/37 = 0.0541
+  LibraryApp       - Book             1/37 = 0.0270
+  LibraryApp       - Statistics       1/37 = 0.0270
+  Book             - Item             1/37 = 0.0270
+  Category         - Item             1/37 = 0.0270
+  Loanable         - LoanService      1/37 = 0.0270
+  Member           - ConsoleNotifier  1/37 = 0.0270
+  Catalog          - LoanService      1/37 = 0.0270
+  LoanService      - TextUtils        1/37 = 0.0270
+
+== A2 : graphe de couplage pondéré ==
+Nœuds : 15   Arêtes : 19
+Cinq couples les plus couplés :
+  Item             - LoanService      0.1081
+  LoanService      - Loan             0.1081
+  LibraryApp       - Item             0.0811
+  LibraryApp       - Catalog          0.0811
+  LibraryApp       - LoanService      0.0811
+Classes isolées : [Dvd, LoanException]
+Exports : sorties/graphe.csv, sorties/graphe.dot
+
+== B1 : regroupement hiérarchique (lien moyen) ==
+ 1  0.1081  {Item}  +  {LoanService}
+ 2  0.0811  {LibraryApp}  +  {Catalog}
+ 3  0.0608  {Item, LoanService}  +  {LibraryApp, Catalog}
+ 4  0.0541  {Statistics}  +  {TextUtils}
+ 5  0.0405  {Loan}  +  {LibraryApp, Item, Catalog, LoanService}
+ 6  0.0270  {Member}  +  {ConsoleNotifier}
+ 7  0.0108  {Book}  +  {LibraryApp, Item, Catalog, LoanService, Loan}
+ 8  0.0090  {Notifier}  +  {LibraryApp, Book, Item, Catalog, LoanService, Loan}
+ 9  0.0077  {Member, ConsoleNotifier}  +  {LibraryApp, Book, Item, Catalog, LoanService, Loan, Notifier}
+10  0.0030  {Category}  +  {LibraryApp, Book, Item, Member, Catalog, ConsoleNotifier, LoanService, Loan, Notifier}
+11  0.0027  {Loanable}  +  {LibraryApp, Book, Category, Item, Member, Catalog, ConsoleNotifier, LoanService, Loan, Notifier}
+12  0.0025  {Statistics, TextUtils}  +  {LibraryApp, Book, Category, Item, Loanable, Member, Catalog, ConsoleNotifier, LoanService, Loan, Notifier}
+13  0.0000  {Dvd}  +  {LoanException}
+14  0.0000  {LibraryApp, Book, Category, Item, Loanable, Member, Catalog, ConsoleNotifier, LoanService, Loan, Notifier, Statistics, TextUtils}  +  {Dvd, LoanException}
+
+Faits chargés. Les étapes A1 à B3 restent à écrire.

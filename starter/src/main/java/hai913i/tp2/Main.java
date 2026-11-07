@@ -8,6 +8,9 @@ import java.util.Locale;
 
 import java.nio.file.Files;
 
+import hai913i.tp2.clustering.AgglomerativeClustering;
+import hai913i.tp2.clustering.Cluster;
+import hai913i.tp2.clustering.Merge;
 import hai913i.tp2.coupling.CouplingMatrix;
 import hai913i.tp2.graph.WeightedGraph;
 import hai913i.tp2.input.Tp1FactsAdapter;
@@ -166,13 +169,24 @@ public final class Main {
           ERR.println("Écriture des exports impossible : " + e.getMessage());
           System.exit(2);
         }
-        // TODO étape B1 : regroupement hiérarchique ascendant, lien moyen,
-        //                 égalités départagées comme le sujet l'impose.
+        AgglomerativeClustering clustering =
+                new AgglomerativeClustering(coupling.classes(), coupling::coupling);
+        OUT.println();
+        OUT.println("== B1 : regroupement hiérarchique (lien moyen) ==");
+        for (Merge m : clustering.merges()) {
+          OUT.printf(Locale.ROOT, "%2d  %.4f  %s  +  %s%n", m.step(), m.similarity(),
+                  group(m.a()), group(m.b()));
+        }
         // TODO étape B2 : représenter et exporter le dendrogramme.
         // TODO étape B3 : couper l'arbre sous les trois contraintes, puis
         //                 vérifier la contrainte M/2 et signaler sa violation.
         OUT.println();
         OUT.println("Faits chargés. Les étapes A1 à B3 restent à écrire.");
+    }
+
+    private static String group(Cluster c) {
+      return c.members().stream().map(Main::simple).toList()
+              .toString().replace('[', '{').replace(']', '}');
     }
 
     private static String simple(String qualifiedName) {
