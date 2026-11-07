@@ -9,7 +9,9 @@ import java.util.Locale;
 import java.nio.file.Files;
 
 import hai913i.tp2.coupling.CouplingMatrix;
+import hai913i.tp2.graph.WeightedGraph;
 import hai913i.tp2.input.Tp1FactsAdapter;
+import hai913i.tp2.output.GraphExporter;
 
 /**
  * Point d'entrée du squelette : vérifie l'environnement et charge les faits.
@@ -73,8 +75,10 @@ public final class Main {
             return;
         }
         Path dir = Path.of(args[0]);
+        Path out = Path.of("sorties");
         double cp = CP_DEFAUT;
         String prefix = null;
+
         for (int i = 1; i < args.length; i++) {
             if ("--cp".equals(args[i]) && i + 1 < args.length) {
                 try {
@@ -85,6 +89,8 @@ public final class Main {
                 }
             } else if ("--prefix".equals(args[i]) && i + 1 < args.length) {
                 prefix = args[++i];
+            } else if ("--out".equals(args[i]) && i + 1 < args.length) {
+                out = Path.of(args[++i]);
             } else {
                 usage("argument inconnu : " + args[i]);
                 return;
@@ -142,7 +148,24 @@ public final class Main {
           OUT.printf(Locale.ROOT, "  %-16s - %-16s %d/%d = %.4f%n",
                   simple(p.a()), simple(p.b()), p.arcs(), coupling.interArcs(), p.coupling());
         }
-        // TODO étape A2 : construire et exporter le graphe de couplage pondéré.
+        WeightedGraph graph = WeightedGraph.from(coupling);
+        OUT.println();
+        OUT.println("== A2 : graphe de couplage pondéré ==");
+        OUT.printf(Locale.ROOT, "Nœuds : %d   Arêtes : %d%n", graph.nodes().size(), graph.edges().size());
+        OUT.println("Cinq couples les plus couplés :");
+        for (WeightedGraph.Edge e : graph.top(5)) {
+          OUT.printf(Locale.ROOT, "  %-16s - %-16s %.4f%n", simple(e.a()), simple(e.b()), e.weight());
+        }
+        OUT.println("Classes isolées : "
+                + graph.isolated().stream().map(Main::simple).toList());
+        try {
+          GraphExporter.writeCsv(graph, out.resolve("graphe.csv"));
+          GraphExporter.writeDot(graph, out.resolve("graphe.dot"));
+          OUT.println("Exports : " + out.resolve("graphe.csv") + ", " + out.resolve("graphe.dot"));
+        } catch (IOException e) {
+          ERR.println("Écriture des exports impossible : " + e.getMessage());
+          System.exit(2);
+        }
         // TODO étape B1 : regroupement hiérarchique ascendant, lien moyen,
         //                 égalités départagées comme le sujet l'impose.
         // TODO étape B2 : représenter et exporter le dendrogramme.
@@ -166,7 +189,7 @@ public final class Main {
         ERR.println("Erreur : " + message);
         ERR.println();
         ERR.println("Usage : java -jar hai913i-tp2.jar <dossier-des-faits>"
-                + " [--cp <valeur>] [--prefix <préfixe>]");
+                + " [--cp <valeur>] [--prefix <préfixe>] [--out <dossier>]");
         ERR.println();
         ERR.println("  <dossier-des-faits>  dossier contenant les trois fichiers");
         ERR.println("                       <préfixe>-classes.csv,");
@@ -176,6 +199,7 @@ public final class Main {
                 + " (défaut : " + CP_DEFAUT + ")");
         ERR.println("  --prefix <préfixe>   force le préfixe ; par défaut il est");
         ERR.println("                       déduit du dossier");
+        ERR.println("  --out <dossier>      dossier des exports (défaut : sorties)");
         System.exit(1);
     }
 
