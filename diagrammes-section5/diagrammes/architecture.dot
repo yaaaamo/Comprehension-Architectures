@@ -1,0 +1,21 @@
+graph architecture {
+  rankdir=LR; nodesep=0.25; ranksep=0.9;
+  node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  edge [fontname="Helvetica-Bold", fontsize=11, color="#555555"];
+  C [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BORDER="0"><B>Module « emprunt »</B></TD></TR><TR><TD BORDER="0"><I>C(G) = 0,0335</I></TD></TR><TR><TD BGCOLOR="#f4cccc" STYLE="rounded">LibraryApp</TD></TR><TR><TD BGCOLOR="#d9ead3" STYLE="rounded">Book</TD></TR><TR><TD BGCOLOR="#d9ead3" STYLE="rounded">Item</TD></TR><TR><TD BGCOLOR="#cfe2f3" STYLE="rounded">Catalog</TD></TR><TR><TD BGCOLOR="#cfe2f3" STYLE="rounded">LoanService</TD></TR><TR><TD BGCOLOR="#cfe2f3" STYLE="rounded">Loan</TD></TR><TR><TD BGCOLOR="#cfe2f3" STYLE="rounded">Notifier</TD></TR></TABLE>>];
+  U [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BORDER="0"><B>Module « util »</B></TD></TR><TR><TD BORDER="0"><I>C(G) = 0,0541</I></TD></TR><TR><TD BGCOLOR="#fff2cc" STYLE="rounded">Statistics</TD></TR><TR><TD BGCOLOR="#fff2cc" STYLE="rounded">TextUtils</TD></TR></TABLE>>];
+  M [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BORDER="0"><B>Module « membre »</B></TD></TR><TR><TD BORDER="0"><I>C(G) = 0,0270</I></TD></TR><TR><TD BGCOLOR="#d9ead3" STYLE="rounded">Member</TD></TR><TR><TD BGCOLOR="#cfe2f3" STYLE="rounded">ConsoleNotifier</TD></TR></TABLE>>];
+  L [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BGCOLOR="#d9ead3" STYLE="rounded">Loanable</TD></TR></TABLE>>];
+  K [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BGCOLOR="#d9ead3" STYLE="rounded">Category</TD></TR></TABLE>>];
+  D [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BGCOLOR="#d9ead3" STYLE="rounded">Dvd</TD></TR></TABLE>>];
+  E [label=<<TABLE BORDER="1" COLOR="#4a7ab0" STYLE="rounded" CELLBORDER="1" CELLSPACING="4" CELLPADDING="5"><TR><TD BGCOLOR="#cfe2f3" STYLE="rounded">LoanException</TD></TR></TABLE>>];
+  C -- M [label="4 arcs", penwidth=4];
+  C -- U [label="2 arcs", penwidth=2.5];
+  C -- L [label="1 arc", penwidth=1.2];
+  C -- K [label="1 arc", penwidth=1.2];
+  legend [label=<<TABLE BORDER="0" CELLSPACING="3" CELLPADDING="3"><TR><TD COLSPAN="2"><B>Paquetage d'origine</B></TD></TR><TR><TD BGCOLOR="#f4cccc" WIDTH="14"></TD><TD ALIGN="LEFT">library.app</TD></TR><TR><TD BGCOLOR="#d9ead3"></TD><TD ALIGN="LEFT">library.model</TD></TR><TR><TD BGCOLOR="#cfe2f3"></TD><TD ALIGN="LEFT">library.service</TD></TR><TR><TD BGCOLOR="#fff2cc"></TD><TD ALIGN="LEFT">library.util</TD></TR></TABLE>>];
+  { rank=same; D; E; legend; }
+  C -- D [style=invis];
+  C -- E [style=invis];
+  C -- legend [style=invis];
+}

@@ -1,0 +1,11 @@
+== B3 : modules pour CP = 0.0300 ==
+Module 1 : 2 classe(s), C(G) = 0.0541  {Statistics, TextUtils}
+Module 2 : 1 classe(s), C(G) = sans objet  {Loanable}
+Module 3 : 1 classe(s), C(G) = sans objet  {Category}
+Module 4 : 1 classe(s), C(G) = sans objet  {Member}
+Module 5 : 1 classe(s), C(G) = sans objet  {ConsoleNotifier}
+Module 6 : 7 classe(s), C(G) = 0.0335  {LibraryApp, Book, Item, Catalog, LoanService, Loan, Notifier}
+Module 7 : 1 classe(s), C(G) = sans objet  {Dvd}
+Module 8 : 1 classe(s), C(G) = sans objet  {LoanException}
+Modules : 8   plafond M/2 = 7
+CONTRAINTE M/2 VIOLÉE : coupe rejetée (8 > 7). Avec ce seuil, les contraintes sont incompatibles.

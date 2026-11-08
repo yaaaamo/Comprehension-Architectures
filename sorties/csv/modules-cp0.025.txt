@@ -1,0 +1,10 @@
+== B3 : modules pour CP = 0.0250 ==
+Module 1 : 2 classe(s), C(G) = 0.0541  {Statistics, TextUtils}
+Module 2 : 1 classe(s), C(G) = sans objet  {Loanable}
+Module 3 : 1 classe(s), C(G) = sans objet  {Category}
+Module 4 : 2 classe(s), C(G) = 0.0270  {Member, ConsoleNotifier}
+Module 5 : 7 classe(s), C(G) = 0.0335  {LibraryApp, Book, Item, Catalog, LoanService, Loan, Notifier}
+Module 6 : 1 classe(s), C(G) = sans objet  {Dvd}
+Module 7 : 1 classe(s), C(G) = sans objet  {LoanException}
+Modules : 7   plafond M/2 = 7
+Contrainte M/2 : respectée

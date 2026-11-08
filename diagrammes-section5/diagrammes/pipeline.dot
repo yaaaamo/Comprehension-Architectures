@@ -1,0 +1,31 @@
+digraph pipeline {
+  rankdir=TB; nodesep=0.4; ranksep=0.4;
+  node [fontname="Helvetica", fontsize=10];
+  edge [fontname="Helvetica", fontsize=9];
+  src  [shape=folder, label="sources Java\n(projet analysé)", style=filled, fillcolor="#fff4d6"];
+  csv  [shape=folder, label="faits canoniques\n(3 fichiers CSV)", style=filled, fillcolor="#eeeeee"];
+  tp1  [shape=box, style="rounded,filled", fillcolor="#fff4d6", label="TP 1\nJdtParser → FactExtractor\n→ CallGraph"];
+  adapt[shape=box, style=rounded, label="Tp1FactsAdapter"];
+  load [shape=box, style=rounded, label="Facts.load"];
+  facts[shape=box, style="rounded,filled", fillcolor="#dfe9f5", label="Facts\nA0"];
+  coup [shape=box, style="rounded,filled", fillcolor="#dfe9f5", label="CouplingMatrix\nA1"];
+  grph [shape=box, style="rounded,filled", fillcolor="#dfe9f5", label="WeightedGraph\nA2"];
+  agg  [shape=box, style="rounded,filled", fillcolor="#dfe9f5", label="Agglomerative\nClustering\nB1, B2"];
+  cut  [shape=box, style="rounded,filled", fillcolor="#dfe9f5", label="ModuleCutter\nB3"];
+  cp   [shape=plaintext, label="--cp"];
+  o1 [shape=note, label="graphe.csv\ngraphe.dot"];
+  o2 [shape=note, label="dendrogramme.txt\nfusions.csv\ndendrogramme.dot"];
+  o3 [shape=note, label="modules-cp<CP>.txt"];
+  src -> tp1 [label="chemin 1\n(retenu)"]; tp1 -> adapt; adapt -> facts;
+  csv -> load [label="format canonique"]; load -> facts;
+  facts -> coup [label="classes, arcs"];
+  coup -> grph [label="C(A,B)"];
+  coup -> agg [label="Similarity"];
+  agg -> cut [label="arbre"];
+  coup -> cut [label="Similarity", style=dashed];
+  cp -> cut [style=dotted, arrowhead=none];
+  grph -> o1 [style=dashed];
+  agg -> o2 [style=dashed];
+  cut -> o3 [style=dashed];
+  {rank=same; src; csv}
+}

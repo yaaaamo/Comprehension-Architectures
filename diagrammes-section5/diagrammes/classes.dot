@@ -1,0 +1,57 @@
+digraph classes {
+  rankdir=TB; nodesep=0.4; ranksep=0.5;
+  node [shape=record, fontname="Helvetica", fontsize=12, style=filled, fillcolor="#f7f7f7"];
+  edge [fontname="Helvetica", fontsize=9];
+
+  subgraph cluster_input { label="hai913i.tp2 + input  (A0)"; fontname="Helvetica-Bold"; fontsize=10; color="#4a7ab0";
+    Facts [label="{Facts|+ classes() : List\<ClassInfo\>\l+ methodOwners() : Map\l+ calls() : List\<CallArc\>\l+ load(dir) : Facts\l+ of(classes, owners, calls) : Facts\l}"];
+    ClassInfo [label="{«record» ClassInfo|name, simpleName, packageName\l}"];
+    CallArc [label="{«record» CallArc|caller, callerClass,\lcallee, calleeClass, sites\l}"];
+    Adapter [label="{Tp1FactsAdapter|+ from(projectDir) : Facts\l}"];
+  }
+  subgraph cluster_coupling { label="coupling  (A1)"; fontname="Helvetica-Bold"; fontsize=10; color="#4a7ab0";
+    Coupling [label="{CouplingMatrix|+ interArcs() : int\l+ coupling(a, b) : double\l+ nonZeroPairs() : List\<Pair\>\l+ sum() : double\l}"];
+  }
+  subgraph cluster_graph { label="graph  (A2)"; fontname="Helvetica-Bold"; fontsize=10; color="#4a7ab0";
+    WGraph [label="{WeightedGraph|+ from(coupling) : WeightedGraph\l+ nodes(), edges()\l+ top(n), isolated()\l}"];
+  }
+  subgraph cluster_clustering { label="clustering  (B1, B2)"; fontname="Helvetica-Bold"; fontsize=10; color="#4a7ab0";
+    Similarity [label="{«interface» Similarity|+ between(a, b) : double\l}"];
+    Agglo [label="{AgglomerativeClustering|+ merges() : List\<Merge\>\l+ root() : Cluster\l+ averageLink(g1, g2, c) : double\l}"];
+    Cluster [label="{Cluster|id, similarity, members\l|+ left(), right() : Cluster\l+ isLeaf() : boolean\l}"];
+    Merge [label="{«record» Merge|step, a, b, similarity, result\l}"];
+  }
+  subgraph cluster_cut { label="cut  (B3)"; fontname="Helvetica-Bold"; fontsize=10; color="#4a7ab0";
+    Cutter [label="{ModuleCutter|+ cut(root, c, cp) : CutResult\l+ internalCoupling(members, c)\l}"];
+    CutResult [label="{«record» CutResult|cp, classCount, modules\l|+ maxModules() : int\l+ respectsMHalf() : boolean\l}"];
+    ClassModule [label="{«record» ClassModule|node : Cluster, internalCoupling\l}"];
+  }
+  subgraph cluster_output { label="output"; fontname="Helvetica-Bold"; fontsize=10; color="#4a7ab0";
+    GraphExp [label="{GraphExporter|+ writeCsv(), readCsv()\l+ writeDot()\l}"];
+    DendExp [label="{DendrogramExporter|+ indentedTree(), mergeList()\l+ dot()\l}"];
+  }
+  TP1 [label="{TP 1 (dépendance Maven)|JdtParser, FactExtractor,\lCallGraph, ProjectFacts\l}", fillcolor="#fff4d6"];
+
+  Facts -> ClassInfo [arrowtail=diamond, dir=back, arrowhead=none, headlabel="*"];
+  Facts -> CallArc [arrowtail=diamond, dir=back, arrowhead=none, headlabel="*"];
+  Adapter -> Facts [style=dashed, label="crée"];
+  Adapter -> TP1 [style=dashed, label="utilise"];
+  Coupling -> Facts [constraint=false, style=dashed, label="lit"];
+  WGraph -> Coupling [style=dashed, label="lit"];
+  Agglo -> Similarity [style=dashed, label="utilise"];
+  Coupling -> Similarity [constraint=false, style=dotted, label="fournit\n(coupling::coupling)"];
+  Agglo -> Cluster [label="root"];
+  Agglo -> Merge [label="*"];
+  Cluster -> Cluster [label="left, right"];
+  Cutter -> Cluster [constraint=false, style=dashed, label="parcourt"];
+  Cutter -> CutResult [style=dashed, label="crée"];
+  CutResult -> ClassModule [label="*"];
+  ClassModule -> Cluster [constraint=false, label="node"];
+  GraphExp -> WGraph [style=dashed];
+  DendExp -> Cluster [constraint=false, style=dashed];
+
+  // rangées : entrée / couplage, graphe, sorties / regroupement, coupe
+  ClassInfo -> Coupling [style=invis];
+  Coupling -> Agglo [style=invis];
+  Coupling -> Cutter [style=invis];
+}
