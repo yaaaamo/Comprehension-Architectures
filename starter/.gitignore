@@ -6,3 +6,15 @@ target/
 .classpath
 .project
 .vscode/
+# macOS / IDE
+.DS_Store
+
+*.iml
+
+
+dependency-reduced-pom.xml
+
+# sorties temporaires
+starter/sorties/
+**/run1.txt
+**/run2.txt

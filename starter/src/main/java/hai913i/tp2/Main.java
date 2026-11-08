@@ -23,33 +23,23 @@ import hai913i.tp2.output.DendrogramExporter;
 import hai913i.tp2.output.GraphExporter;
 
 /**
- * Point d'entrée du squelette : vérifie l'environnement et charge les faits.
+ * Point d'entrée unique de l'outil du TP 2.
  *
- * <p><b>Ce qu'il fait.</b> Il lit les arguments de la ligne de commande, charge
- * un jeu de faits au format canonique, et affiche les trois compteurs du
- * <b>point de contrôle A0</b> : nombre de classes, de méthodes, d'arcs du
- * graphe d'appel.</p>
- *
- * <p><b>Ce qu'il ne fait pas.</b> Tout le reste. Le couplage (A1), le graphe
- * pondéré (A2), le regroupement (B1), le dendrogramme (B2) et la coupe (B3)
- * sont l'objet du TP : leurs emplacements sont marqués {@code TODO} ci-dessous,
- * et rien n'en est fourni.</p>
+ * <p>Charge les faits, soit par notre extracteur du TP 1 sur un dossier de
+ * sources Java (chemin 1, via {@link hai913i.tp2.input.Tp1FactsAdapter}), soit
+ * depuis un jeu de faits au format canonique ({@code *-classes.csv}), puis
+ * enchaîne les étapes A0 à B3 : couplage, graphe pondéré, regroupement
+ * hiérarchique, dendrogramme et coupe selon le seuil {@code --cp}.</p>
  *
  * <pre>
  *   mvn clean package
- *   java -jar target/hai913i-tp2.jar CHEMIN_DU_DOSSIER_DES_FAITS
- *   java -jar target/hai913i-tp2.jar CHEMIN_DU_DOSSIER_DES_FAITS --cp 0.025
+ *   java -jar target/hai913i-tp2.jar DOSSIER [--cp 0.025] [--out DOSSIER] [--prefix PREFIXE]
  * </pre>
  *
- * <p>Le dossier passé en argument est celui qui contient les trois fichiers
- * {@code ...-classes.csv}, {@code ...-methods.csv} et {@code ...-calls.csv}.
- * Le préfixe en est déduit : votre outil n'a donc aucune raison de connaître le
- * nom du projet de validation, et il fonctionnera tel quel sur un autre jeu de
- * faits..</p>
- *
- * <p><b>Codes de sortie</b> : 0 si les faits sont chargés, 1 si les arguments
- * sont invalides, 2 si les fichiers sont illisibles. Gardez cette convention
- * dans votre propre outil : elle fait partie du critère de reproductibilité.</p>
+ * <p><b>Codes de sortie</b> : 0 si l'exécution se termine (y compris quand la
+ * contrainte M/2 est violée, ce qui est signalé dans la sortie), 1 si les
+ * arguments sont invalides, 2 si les faits sont illisibles ou les exports
+ * impossibles à écrire.</p>
  */
 public final class Main {
 
