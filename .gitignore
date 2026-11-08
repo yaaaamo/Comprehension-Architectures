@@ -1,0 +1,8 @@
+.DS_Store
+.idea/
+*.iml
+target/
+dependency-reduced-pom.xml
+starter/sorties/
+**/run1.txt
+**/run2.txt
